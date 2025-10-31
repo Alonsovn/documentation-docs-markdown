@@ -5,13 +5,15 @@ This file provides a comprehensive guide to implementing microservices architect
 ## Core Principles
 
 ### Service Design Principles
+
 - **Single Responsibility**: Each service has one business capability
-- **Autonomous**: Services can be developed, deployed, and scaled independently  
+- **Autonomous**: Services can be developed, deployed, and scaled independently
 - **Business-Focused**: Services align with business domains
 - **Decentralized**: No central coordination point
 - **Failure-Resilient**: Services handle failures gracefully
 
 ### Domain-Driven Design Integration
+
 ```java
 // Bounded Context example
 @Service
@@ -24,7 +26,7 @@ public class OrderService {
     }
 }
 
-@Service  
+@Service
 public class InventoryService {
     // Inventory domain logic only
     public void reserveItems(List<OrderItem> items) {
@@ -38,6 +40,7 @@ public class InventoryService {
 ## Service Communication
 
 ### Synchronous Communication
+
 ```java
 // Using Feign Client
 @FeignClient(name = "user-service")
@@ -51,12 +54,12 @@ public interface UserServiceClient {
 public class OrderService {
     @Autowired
     private UserServiceClient userServiceClient;
-    
+
     @CircuitBreaker(name = "user-service", fallbackMethod = "fallbackGetUser")
     public User getUser(Long userId) {
         return userServiceClient.getUser(userId);
     }
-    
+
     public User fallbackGetUser(Long userId, Exception ex) {
         return User.defaultUser(); // Fallback response
     }
@@ -64,17 +67,18 @@ public class OrderService {
 ```
 
 ### Asynchronous Communication
+
 ```java
 // Event Publishing
 @Component
 public class OrderEventPublisher {
     @Autowired
     private RabbitTemplate rabbitTemplate;
-    
+
     public void publishOrderCreated(Order order) {
         OrderCreatedEvent event = new OrderCreatedEvent(
-            order.getId(), 
-            order.getUserId(), 
+            order.getId(),
+            order.getUserId(),
             order.getTotal()
         );
         rabbitTemplate.convertAndSend("order.exchange", "order.created", event);
@@ -93,9 +97,10 @@ public class NotificationService {
 ## Data Management
 
 ### Database per Service
+
 ```yaml
 # Docker Compose for multiple databases
-version: '3.8'
+version: "3.8"
 services:
   user-db:
     image: postgres:14
@@ -103,14 +108,14 @@ services:
       POSTGRES_DB: userdb
       POSTGRES_USER: user_svc
       POSTGRES_PASSWORD: password
-    
+
   order-db:
     image: postgres:14
     environment:
-      POSTGRES_DB: orderdb  
+      POSTGRES_DB: orderdb
       POSTGRES_USER: order_svc
       POSTGRES_PASSWORD: password
-      
+
   product-db:
     image: mongo:5
     environment:
@@ -118,31 +123,32 @@ services:
 ```
 
 ### Saga Pattern for Distributed Transactions
+
 ```java
 // Orchestration-based Saga
 @Service
 public class OrderSagaOrchestrator {
-    
+
     public void processOrder(OrderRequest request) {
         try {
             // Step 1: Reserve inventory
             inventoryService.reserveItems(request.getItems());
-            
+
             // Step 2: Process payment
             paymentService.processPayment(request.getPayment());
-            
+
             // Step 3: Create order
             orderService.createOrder(request);
-            
+
             // Step 4: Send confirmation
             notificationService.sendConfirmation(request.getUserId());
-            
+
         } catch (Exception e) {
             // Compensate in reverse order
             compensate(request);
         }
     }
-    
+
     private void compensate(OrderRequest request) {
         try {
             notificationService.sendCancellation(request.getUserId());
@@ -159,7 +165,7 @@ public class OrderSagaOrchestrator {
 // Choreography-based Saga
 @EventListener
 public class InventoryService {
-    
+
     @EventListener
     public void on(OrderCreatedEvent event) {
         try {
@@ -171,9 +177,9 @@ public class InventoryService {
     }
 }
 
-@EventListener  
+@EventListener
 public class PaymentService {
-    
+
     @EventListener
     public void on(ItemsReservedEvent event) {
         try {
@@ -189,6 +195,7 @@ public class PaymentService {
 ## Service Discovery
 
 ### Eureka Server Configuration
+
 ```java
 @SpringBootApplication
 @EnableEurekaServer
@@ -200,6 +207,7 @@ public class ServiceRegistryApplication {
 ```
 
 ### Service Registration
+
 ```yaml
 # application.yml for service
 eureka:
@@ -208,7 +216,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
-    
+
 spring:
   application:
     name: user-service
@@ -217,10 +225,11 @@ spring:
 ## API Gateway
 
 ### Spring Cloud Gateway
+
 ```java
 @Configuration
 public class GatewayConfig {
-    
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -241,16 +250,17 @@ public class GatewayConfig {
 ## Monitoring and Observability
 
 ### Distributed Tracing
+
 ```java
 // Spring Cloud Sleuth configuration
 @Configuration
 public class TracingConfig {
-    
+
     @Bean
     public Sender sender() {
         return OkHttpSender.create("http://zipkin:9411/api/v2/spans");
     }
-    
+
     @Bean
     public AsyncReporter<Span> spanReporter() {
         return AsyncReporter.create(sender());
@@ -260,7 +270,7 @@ public class TracingConfig {
 // Custom tracing
 @Service
 public class UserService {
-    
+
     @NewSpan("get-user")
     public User getUser(@SpanTag("userId") Long userId) {
         return userRepository.findById(userId);
@@ -269,13 +279,14 @@ public class UserService {
 ```
 
 ### Health Checks
+
 ```java
 @Component
 public class DatabaseHealthIndicator implements HealthIndicator {
-    
+
     @Autowired
     private DataSource dataSource;
-    
+
     @Override
     public Health health() {
         try (Connection connection = dataSource.getConnection()) {
@@ -298,6 +309,7 @@ public class DatabaseHealthIndicator implements HealthIndicator {
 ## Deployment Strategies
 
 ### Kubernetes Deployment
+
 ```yaml
 # user-service-deployment.yaml
 apiVersion: apps/v1
@@ -315,35 +327,35 @@ spec:
         app: user-service
     spec:
       containers:
-      - name: user-service
-        image: user-service:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: DB_URL
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: url
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /actuator/health
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /actuator/health/readiness
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        - name: user-service
+          image: user-service:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: url
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
 
 ---
 apiVersion: v1
@@ -354,20 +366,21 @@ spec:
   selector:
     app: user-service
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
   type: ClusterIP
 ```
 
 ## Security
 
 ### JWT Authentication
+
 ```java
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -383,10 +396,11 @@ public class SecurityConfig {
 ```
 
 ### Service-to-Service Authentication
+
 ```java
 @Configuration
 public class FeignConfig {
-    
+
     @Bean
     public RequestInterceptor requestInterceptor() {
         return requestTemplate -> {
@@ -403,24 +417,27 @@ public class FeignConfig {
 ## Best Practices
 
 ### Service Sizing
+
 - **Team Size**: Two-pizza team rule (6-8 people)
 - **Codebase**: Should be maintainable by one team
 - **Data**: Single business entity or aggregate
 - **Deployment**: Independently deployable
 
 ### Communication Guidelines
+
 - **Prefer Async**: Use events for non-critical operations
 - **Timeout Handling**: Always set timeouts for sync calls
 - **Circuit Breakers**: Prevent cascade failures
 - **Idempotency**: Make operations repeatable safely
 
 ### Testing Strategy
+
 ```java
 // Contract Testing with Pact
 @ExtendWith(PactConsumerTestExt.class)
 @PactTestFor(providerName = "user-service")
 public class UserServiceContractTest {
-    
+
     @Pact(consumer = "order-service")
     public RequestResponsePact userExistsPact(PactDslWithProvider builder) {
         return builder
@@ -435,13 +452,13 @@ public class UserServiceContractTest {
                 .stringType("email", "user@example.com")))
             .toPact();
     }
-    
+
     @Test
     @PactTestFor(pactMethod = "userExistsPact")
     void testGetUser(MockServer mockServer) {
         UserServiceClient client = new UserServiceClient(mockServer.getUrl());
         User user = client.getUser(123L);
-        
+
         assertThat(user.getId()).isEqualTo(123L);
         assertThat(user.getEmail()).isEqualTo("user@example.com");
     }
@@ -451,22 +468,26 @@ public class UserServiceContractTest {
 ## Common Pitfalls
 
 ### Distributed Monolith
+
 - Services are too tightly coupled
 - Synchronous communication everywhere
 - Shared databases between services
 - Deploy services together
 
 ### Chatty Interfaces
+
 - Too many service calls for single operation
 - Fine-grained APIs
 - Network overhead
 
 ### Data Consistency Issues
+
 - Not handling eventual consistency
 - Missing compensation logic
 - Ignoring distributed transaction complexity
 
 ### Solutions
+
 1. **Design for failure**: Assume services will fail
 2. **Embrace eventual consistency**: Design business processes accordingly
 3. **Monitor everything**: Comprehensive observability

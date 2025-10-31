@@ -5,17 +5,20 @@ This file covers best practices for managing Python dependencies across differen
 ## Package Managers
 
 ### pip (Standard)
+
 - Built into Python
 - Works with requirements.txt
 - Basic dependency resolution
 
 ### Poetry (Recommended)
+
 - Modern dependency management
 - Lock file support
 - Virtual environment integration
 - Better dependency resolution
 
 ### pipenv
+
 - Combines pip and virtualenv
 - Pipfile and Pipfile.lock
 - Good for simple projects

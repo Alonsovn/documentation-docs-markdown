@@ -11,6 +11,7 @@ Before starting, ensure you have administrative access to your machine and a sta
 ### macOS Setup
 
 #### Install Homebrew
+
 ```bash
 # Install Homebrew (package manager for macOS)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -21,6 +22,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 #### Install Essential Tools
+
 ```bash
 # Development tools
 brew install git node python@3.11 java docker postgresql redis
@@ -32,6 +34,7 @@ brew install --cask visual-studio-code intellij-idea-ce postman docker-desktop
 ### Windows Setup
 
 #### Install Chocolatey
+
 ```powershell
 # Run PowerShell as Administrator
 Set-ExecutionPolicy Bypass -Scope Process -Force
@@ -40,6 +43,7 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocola
 ```
 
 #### Install Essential Tools
+
 ```powershell
 # Development tools
 choco install git nodejs python java docker-desktop postgresql redis-64 -y
@@ -51,11 +55,13 @@ choco install vscode intellijidea-community postman -y
 ### Linux (Ubuntu/Debian) Setup
 
 #### Update System
+
 ```bash
 sudo apt update && sudo apt upgrade -y
 ```
 
 #### Install Essential Tools
+
 ```bash
 # Development tools
 sudo apt install -y git curl wget build-essential
@@ -85,6 +91,7 @@ sudo apt install -y redis-server
 ## Development Tools Installation
 
 ### Git Configuration
+
 ```bash
 # Set up your identity
 git config --global user.name "Your Name"
@@ -111,6 +118,7 @@ git config --global credential.helper cache
 ```
 
 ### SSH Key Setup
+
 ```bash
 # Generate SSH key
 ssh-keygen -t ed25519 -C "your.email@company.com"
@@ -134,6 +142,7 @@ Add the copied public key to your GitHub account: Settings → SSH and GPG keys 
 ### Python Environment Setup
 
 #### Install Poetry (Recommended)
+
 ```bash
 # Install Poetry
 curl -sSL https://install.python-poetry.org | python3 -
@@ -147,6 +156,7 @@ poetry config virtualenvs.in-project true
 ```
 
 #### Alternative: Traditional Virtual Environment
+
 ```bash
 # Create virtual environment
 python3 -m venv venv
@@ -165,6 +175,7 @@ pip install requests fastapi uvicorn pytest black flake8
 ### Node.js Environment Setup
 
 #### Install Node Version Manager (Optional but Recommended)
+
 ```bash
 # Install nvm (macOS/Linux)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
@@ -177,6 +188,7 @@ nvm alias default node
 ```
 
 #### Install Global Packages
+
 ```bash
 npm install -g @angular/cli create-react-app typescript ts-node nodemon
 ```
@@ -184,6 +196,7 @@ npm install -g @angular/cli create-react-app typescript ts-node nodemon
 ### Java Environment Setup
 
 #### Set JAVA_HOME
+
 ```bash
 # macOS (add to ~/.zshrc or ~/.bash_profile)
 export JAVA_HOME=$(/usr/libexec/java_home)
@@ -196,6 +209,7 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ```
 
 #### Install Maven
+
 ```bash
 # macOS
 brew install maven
@@ -210,6 +224,7 @@ choco install maven
 ## Database Setup
 
 ### PostgreSQL Configuration
+
 ```bash
 # Start PostgreSQL service
 # macOS (if installed via Homebrew)
@@ -233,6 +248,7 @@ ALTER USER devuser CREATEDB;
 ```
 
 ### Redis Configuration
+
 ```bash
 # Start Redis service
 # macOS
@@ -250,11 +266,13 @@ redis-cli ping
 ## Docker Setup
 
 ### Docker Desktop Installation
+
 1. Download Docker Desktop from [docker.com](https://www.docker.com/products/docker-desktop)
 2. Install and start Docker Desktop
 3. Sign in to Docker Hub (optional but recommended)
 
 ### Verify Docker Installation
+
 ```bash
 # Check Docker version
 docker --version
@@ -275,6 +293,7 @@ docker pull redis:7-alpine
 ### Visual Studio Code Setup
 
 #### Install Essential Extensions
+
 ```bash
 # Install VS Code extensions via command line
 code --install-extension ms-python.python
@@ -288,7 +307,9 @@ code --install-extension GitHub.copilot
 ```
 
 #### Configure Settings
+
 Create `.vscode/settings.json` in your workspace:
+
 ```json
 {
   "editor.formatOnSave": true,
@@ -309,6 +330,7 @@ Create `.vscode/settings.json` in your workspace:
 ### IntelliJ IDEA Setup
 
 #### Install Plugins
+
 - Python (if using IntelliJ IDEA Ultimate)
 - Docker
 - GitToolBox
@@ -316,6 +338,7 @@ Create `.vscode/settings.json` in your workspace:
 - SonarLint
 
 #### Configure Code Style
+
 1. Go to Settings → Editor → Code Style
 2. Import scheme from company style guide
 3. Set line length to 120 characters
@@ -324,6 +347,7 @@ Create `.vscode/settings.json` in your workspace:
 ## Environment Variables
 
 ### Create Environment Files
+
 ```bash
 # Create global environment file
 touch ~/.env
@@ -344,6 +368,7 @@ echo 'source ~/.env' >> ~/.bashrc
 ## Testing the Setup
 
 ### Clone and Run Sample Project
+
 ```bash
 # Clone our template repository
 git clone https://github.com/EndToEndLabCR/template-api-python.git
@@ -360,6 +385,7 @@ curl http://localhost:8000/health
 ```
 
 ### Verify All Tools
+
 ```bash
 # Check all installations
 echo "=== Tool Versions ==="
@@ -387,6 +413,7 @@ docker run --rm hello-world
 ## Troubleshooting Common Issues
 
 ### Permission Issues (macOS/Linux)
+
 ```bash
 # Fix npm permissions
 sudo chown -R $(whoami) ~/.npm
@@ -398,6 +425,7 @@ sudo usermod -aG docker $USER
 ```
 
 ### PATH Issues
+
 ```bash
 # Check your PATH
 echo $PATH
@@ -407,6 +435,7 @@ source ~/.bashrc  # or ~/.zshrc for zsh
 ```
 
 ### Port Conflicts
+
 ```bash
 # Check what's running on common ports
 lsof -i :3000  # React development server
@@ -420,6 +449,7 @@ kill -9 <PID>
 ```
 
 ### Database Connection Issues
+
 ```bash
 # Check PostgreSQL is running
 ps aux | grep postgres
@@ -436,6 +466,7 @@ sudo -u postgres psql
 ## Next Steps
 
 After completing the setup:
+
 1. Join the team Slack channels
 2. Request access to development environments
 3. Clone and explore our template projects
@@ -445,6 +476,7 @@ After completing the setup:
 ## Maintenance
 
 ### Regular Updates
+
 ```bash
 # Update Homebrew packages (macOS)
 brew update && brew upgrade
@@ -461,6 +493,7 @@ poetry update  # if using Poetry
 ```
 
 ### Backup Configuration
+
 - Export VS Code settings and extensions
 - Backup your SSH keys securely
 - Document any custom configurations

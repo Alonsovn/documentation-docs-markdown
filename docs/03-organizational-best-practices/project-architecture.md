@@ -5,16 +5,19 @@ This file outlines architectural principles and patterns for building scalable, 
 ## Architectural Principles
 
 ### Separation of Concerns
+
 - Each component has a single, well-defined responsibility
 - Business logic separated from presentation logic
 - Data access isolated from business rules
 
 ### Single Responsibility Principle
+
 - Classes and modules should have one reason to change
 - Functions should do one thing well
 - Clear boundaries between components
 
 ### Dependency Inversion
+
 - High-level modules should not depend on low-level modules
 - Both should depend on abstractions
 - Use dependency injection for loose coupling
@@ -22,18 +25,21 @@ This file outlines architectural principles and patterns for building scalable, 
 ## Layered Architecture
 
 ### Presentation Layer
+
 - User interface components
 - Input validation
 - Request/response handling
 - No business logic
 
 ### Business Logic Layer
+
 - Domain models and entities
 - Business rules and validation
 - Use cases and workflows
 - Independent of infrastructure
 
 ### Data Access Layer
+
 - Repository patterns
 - Database connections
 - External API integrations
@@ -52,14 +58,15 @@ This file outlines architectural principles and patterns for building scalable, 
 ## Design Patterns
 
 ### Repository Pattern
+
 ```python
 class UserRepository:
     def get_by_id(self, user_id: int) -> User:
         pass
-    
+
     def save(self, user: User) -> None:
         pass
-    
+
     def delete(self, user_id: int) -> None:
         pass
 
@@ -70,6 +77,7 @@ class DatabaseUserRepository(UserRepository):
 ```
 
 ### Factory Pattern
+
 ```python
 class DatabaseConnectionFactory:
     @staticmethod
@@ -83,14 +91,15 @@ class DatabaseConnectionFactory:
 ```
 
 ### Observer Pattern
+
 ```python
 class EventManager:
     def __init__(self):
         self._observers = []
-    
+
     def subscribe(self, observer):
         self._observers.append(observer)
-    
+
     def notify(self, event):
         for observer in self._observers:
             observer.handle(event)
@@ -99,17 +108,20 @@ class EventManager:
 ## Microservices Architecture
 
 ### Service Boundaries
+
 - Business capability alignment
 - Data ownership
 - Independent deployment
 - Team autonomy
 
 ### Communication Patterns
+
 - Synchronous: REST APIs, GraphQL
 - Asynchronous: Message queues, events
 - Service mesh for complex interactions
 
 ### Data Management
+
 - Database per service
 - Event sourcing for data consistency
 - CQRS for read/write separation
@@ -117,6 +129,7 @@ class EventManager:
 ## API Design
 
 ### RESTful Principles
+
 ```
 GET    /users          # List users
 GET    /users/{id}     # Get specific user
@@ -126,6 +139,7 @@ DELETE /users/{id}     # Delete user
 ```
 
 ### GraphQL Design
+
 ```graphql
 type Query {
   user(id: ID!): User
@@ -141,16 +155,19 @@ type Mutation {
 ## Security Architecture
 
 ### Authentication
+
 - JSON Web Tokens (JWT)
 - OAuth 2.0 / OpenID Connect
 - Multi-factor authentication
 
 ### Authorization
+
 - Role-based access control (RBAC)
 - Attribute-based access control (ABAC)
 - Policy enforcement points
 
 ### Data Protection
+
 - Encryption at rest and in transit
 - Secure key management
 - Data anonymization/pseudonymization
@@ -158,16 +175,19 @@ type Mutation {
 ## Scalability Patterns
 
 ### Horizontal Scaling
+
 - Load balancers
 - Stateless services
 - Database sharding
 
 ### Caching Strategies
+
 - In-memory caching (Redis)
 - CDN for static content
 - Application-level caching
 
 ### Performance Optimization
+
 - Lazy loading
 - Connection pooling
 - Asynchronous processing

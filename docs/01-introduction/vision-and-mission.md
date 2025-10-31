@@ -9,6 +9,7 @@ To be the leading resource for comprehensive, practical software development doc
 ## Mission
 
 Our mission is to:
+
 - Provide clear, up-to-date technical documentation
 - Establish and maintain best practices across all technology stacks
 - Foster a culture of knowledge sharing and continuous learning

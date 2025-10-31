@@ -8,6 +8,7 @@ This file provides solutions to common Docker issues and troubleshooting techniq
 
 **Problem**: Container exits immediately
 **Solutions**:
+
 - Check container logs: `docker logs container_id`
 - Verify the command is correct
 - Ensure proper permissions
@@ -17,6 +18,7 @@ This file provides solutions to common Docker issues and troubleshooting techniq
 
 **Problem**: Docker build fails
 **Solutions**:
+
 - Review Dockerfile syntax
 - Check file paths and permissions
 - Verify base image availability
@@ -26,6 +28,7 @@ This file provides solutions to common Docker issues and troubleshooting techniq
 
 **Problem**: Slow container performance
 **Solutions**:
+
 - Increase allocated resources
 - Optimize image size
 - Use volume mounts for data

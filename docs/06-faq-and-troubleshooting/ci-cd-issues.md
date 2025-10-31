@@ -7,12 +7,14 @@ This file addresses common continuous integration and continuous deployment prob
 ### Workflow Not Triggering
 
 #### Common Causes
+
 - Workflow file not in `.github/workflows/` directory
 - YAML syntax errors
 - Incorrect trigger configuration
 - Branch protection rules blocking workflow
 
 #### Solutions
+
 ```yaml
 # Check workflow file location
 .github/
@@ -33,6 +35,7 @@ yamllint .github/workflows/ci.yml
 ```
 
 #### Debug Steps
+
 ```bash
 # Check workflow runs in GitHub UI
 # Go to Actions tab in repository
@@ -47,14 +50,16 @@ yamllint .github/workflows/ci.yml
 ### Authentication and Permissions
 
 #### Secrets Not Available
+
 ```yaml
 # Error: Secret not found
 - name: Deploy
   env:
-    API_KEY: ${{ secrets.API_KEY }}  # Secret not set
+    API_KEY: ${{ secrets.API_KEY }} # Secret not set
 ```
 
 **Solutions:**
+
 ```bash
 # Add secrets in GitHub repository:
 # Settings → Secrets and variables → Actions → New repository secret
@@ -72,6 +77,7 @@ yamllint .github/workflows/ci.yml
 ```
 
 #### Permission Denied Errors
+
 ```yaml
 # Error: Permission denied when pushing/deploying
 - name: Deploy
@@ -80,6 +86,7 @@ yamllint .github/workflows/ci.yml
 ```
 
 **Solutions:**
+
 ```yaml
 # Use GitHub token for Git operations
 - name: Deploy
@@ -100,13 +107,15 @@ permissions:
 ### Build Failures
 
 #### Dependency Installation Issues
+
 ```yaml
 # Node.js dependency issues
 - name: Install dependencies
-  run: npm ci  # May fail due to package-lock.json issues
+  run: npm ci # May fail due to package-lock.json issues
 ```
 
 **Solutions:**
+
 ```yaml
 # Use caching for dependencies
 - name: Cache Node modules
@@ -120,7 +129,7 @@ permissions:
 - name: Install dependencies
   run: |
     npm ci --prefer-offline --no-audit
-    
+
 # For Python projects
 - name: Cache pip dependencies
   uses: actions/cache@v3
@@ -137,15 +146,17 @@ permissions:
 ```
 
 #### Environment Issues
+
 ```yaml
 # Wrong Node.js version
 - name: Setup Node.js
   uses: actions/setup-node@v3
   with:
-    node-version: '16'  # May not match local development
+    node-version: "16" # May not match local development
 ```
 
 **Solutions:**
+
 ```yaml
 # Use matrix builds for multiple versions
 strategy:
@@ -154,25 +165,26 @@ strategy:
     os: [ubuntu-latest, windows-latest, macos-latest]
 
 steps:
-- name: Setup Node.js ${{ matrix.node-version }}
-  uses: actions/setup-node@v3
-  with:
-    node-version: ${{ matrix.node-version }}
+  - name: Setup Node.js ${{ matrix.node-version }}
+    uses: actions/setup-node@v3
+    with:
+      node-version: ${{ matrix.node-version }}
 
-# Use .nvmrc file for consistency
-- name: Read .nvmrc
-  run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
-  id: nvmrc
+  # Use .nvmrc file for consistency
+  - name: Read .nvmrc
+    run: echo "node_version=$(cat .nvmrc)" >> $GITHUB_OUTPUT
+    id: nvmrc
 
-- name: Setup Node.js
-  uses: actions/setup-node@v3
-  with:
-    node-version: ${{ steps.nvmrc.outputs.node_version }}
+  - name: Setup Node.js
+    uses: actions/setup-node@v3
+    with:
+      node-version: ${{ steps.nvmrc.outputs.node_version }}
 ```
 
 ### Testing Issues
 
 #### Test Failures in CI but Pass Locally
+
 ```yaml
 # Tests fail due to environment differences
 - name: Run tests
@@ -180,7 +192,9 @@ steps:
 ```
 
 **Common Causes and Solutions:**
+
 1. **Timezone differences**
+
 ```yaml
 - name: Run tests
   env:
@@ -189,6 +203,7 @@ steps:
 ```
 
 2. **Database/service dependencies**
+
 ```yaml
 # Use service containers
 services:
@@ -211,6 +226,7 @@ services:
 ```
 
 3. **Race conditions**
+
 ```yaml
 - name: Wait for services
   run: |
@@ -219,6 +235,7 @@ services:
 ```
 
 #### Flaky Tests
+
 ```yaml
 # Tests pass/fail randomly
 - name: Run tests with retry
@@ -232,6 +249,7 @@ services:
 ### Deployment Issues
 
 #### Docker Build Failures
+
 ```yaml
 # Docker build context issues
 - name: Build Docker image
@@ -240,6 +258,7 @@ services:
 ```
 
 **Solutions:**
+
 ```yaml
 # Use Docker Buildx action
 - name: Set up Docker Buildx
@@ -268,6 +287,7 @@ CMD ["npm", "start"]
 ```
 
 #### AWS Deployment Issues
+
 ```yaml
 # AWS credentials not configured
 - name: Deploy to AWS
@@ -276,6 +296,7 @@ CMD ["npm", "start"]
 ```
 
 **Solutions:**
+
 ```yaml
 - name: Configure AWS credentials
   uses: aws-actions/configure-aws-credentials@v2
@@ -295,6 +316,7 @@ CMD ["npm", "start"]
 ### Pipeline Syntax Errors
 
 #### Groovy Syntax Issues
+
 ```groovy
 // Common syntax errors
 pipeline {
@@ -311,6 +333,7 @@ pipeline {
 ```
 
 **Solutions:**
+
 ```groovy
 pipeline {
     agent any
@@ -319,7 +342,7 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm test'
-                
+
                 // For multi-line commands
                 sh '''
                     npm install
@@ -338,6 +361,7 @@ pipeline {
 ### Agent and Node Issues
 
 #### No Available Agents
+
 ```groovy
 pipeline {
     agent { label 'nonexistent-label' }  // No agents with this label
@@ -345,6 +369,7 @@ pipeline {
 ```
 
 **Solutions:**
+
 ```groovy
 // Use any available agent
 pipeline {
@@ -383,6 +408,7 @@ pipeline {
 ### Plugin Issues
 
 #### Missing Plugins
+
 ```groovy
 // Using plugins that aren't installed
 pipeline {
@@ -404,13 +430,16 @@ pipeline {
 ```
 
 **Solutions:**
+
 1. Install required plugins through Jenkins UI
 2. Use plugin manager CLI
+
 ```bash
 java -jar jenkins-cli.jar -s http://localhost:8080/ install-plugin html-publisher
 ```
 
 3. Check plugin compatibility
+
 ```groovy
 // Check if plugin is available
 if (Jenkins.instance.pluginManager.getPlugin('html-publisher')) {
@@ -425,16 +454,18 @@ if (Jenkins.instance.pluginManager.getPlugin('html-publisher')) {
 ### Runner Problems
 
 #### No Runners Available
+
 ```yaml
 # .gitlab-ci.yml
 test:
   script:
     - npm test
   tags:
-    - nonexistent-tag  # No runners with this tag
+    - nonexistent-tag # No runners with this tag
 ```
 
 **Solutions:**
+
 ```yaml
 # Use shared runners
 test:
@@ -455,6 +486,7 @@ test:
 ```
 
 #### Runner Configuration Issues
+
 ```yaml
 # Docker-in-Docker issues
 build:
@@ -462,10 +494,11 @@ build:
   services:
     - docker:dind
   script:
-    - docker build -t myapp .  # May fail without proper setup
+    - docker build -t myapp . # May fail without proper setup
 ```
 
 **Solutions:**
+
 ```yaml
 # Proper Docker-in-Docker setup
 build:
@@ -484,18 +517,20 @@ build:
 ### Cache and Artifacts Issues
 
 #### Cache Not Working
+
 ```yaml
 # Cache configuration issues
 test:
   cache:
     paths:
-      - node_modules/  # May not be restored properly
+      - node_modules/ # May not be restored properly
   script:
     - npm install
     - npm test
 ```
 
 **Solutions:**
+
 ```yaml
 # Proper cache configuration
 test:
@@ -522,7 +557,9 @@ test:
 ### Performance Issues
 
 #### Slow Build Times
+
 **Optimization Strategies:**
+
 ```yaml
 # Use caching effectively
 - name: Cache dependencies
@@ -540,7 +577,7 @@ strategy:
     include:
       - name: "Unit Tests"
         command: "npm run test:unit"
-      - name: "Integration Tests"  
+      - name: "Integration Tests"
         command: "npm run test:integration"
       - name: "E2E Tests"
         command: "npm run test:e2e"
@@ -550,6 +587,7 @@ runs-on: ubuntu-latest  # Generally faster than other options
 ```
 
 #### Resource Constraints
+
 ```yaml
 # Monitor resource usage
 - name: Monitor resources
@@ -565,6 +603,7 @@ runs-on: ubuntu-latest  # Generally faster than other options
 ### Security Issues
 
 #### Exposed Secrets
+
 ```bash
 # Check for accidentally committed secrets
 git log --grep="password\|secret\|key" --oneline
@@ -576,6 +615,7 @@ snyk test
 ```
 
 **Prevention:**
+
 ```yaml
 # Use environment-specific secrets
 - name: Deploy to staging
@@ -594,6 +634,7 @@ snyk test
 ### Monitoring and Debugging
 
 #### Enable Debug Logging
+
 ```yaml
 # GitHub Actions
 - name: Enable debug logging
@@ -615,6 +656,7 @@ pipeline {
 ```
 
 #### Troubleshooting Steps
+
 1. **Check workflow/pipeline status** in UI
 2. **Review logs** for error messages
 3. **Verify configuration** files
@@ -626,6 +668,7 @@ pipeline {
 ### Common Anti-patterns
 
 #### Don't Do This
+
 ```yaml
 # Hardcoded values
 - name: Deploy
@@ -651,6 +694,7 @@ pipeline {
 ```
 
 #### Best Practices
+
 ```yaml
 # Use environment variables
 - name: Deploy
@@ -677,14 +721,14 @@ jobs:
     steps:
       - name: Run tests
         run: npm test
-  
+
   build:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Build application
         run: npm run build
-  
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -697,6 +741,7 @@ jobs:
 ### Emergency Procedures
 
 #### Rollback Strategies
+
 ```bash
 # GitHub Actions - revert commit
 git revert HEAD~1
@@ -717,6 +762,7 @@ docker run -d --name myapp myapp:previous-version
 ```
 
 #### When to Contact Support
+
 - Pipeline has been failing for >30 minutes
 - Security incident detected
 - Unable to deploy critical hotfix

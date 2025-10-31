@@ -5,17 +5,16 @@ This file explains how to structure React components effectively for maintainabi
 ## Component Organization
 
 ### Functional Components (Recommended)
+
 ```jsx
-import React from 'react';
+import React from "react";
 
 const UserProfile = ({ user, onEdit }) => {
   return (
     <div className="user-profile">
       <h2>{user.name}</h2>
       <p>{user.email}</p>
-      <button onClick={() => onEdit(user.id)}>
-        Edit Profile
-      </button>
+      <button onClick={() => onEdit(user.id)}>Edit Profile</button>
     </div>
   );
 };
@@ -24,6 +23,7 @@ export default UserProfile;
 ```
 
 ### Component File Structure
+
 ```
 components/
   UserProfile/
@@ -36,14 +36,17 @@ components/
 ## Design Patterns
 
 ### Container vs Presentational Components
+
 - **Container**: Handle logic and state
 - **Presentational**: Focus on UI rendering
 
 ### Composition over Inheritance
+
 - Use props.children for flexibility
 - Create reusable wrapper components
 
 ### Custom Hooks
+
 - Extract component logic into reusable hooks
 - Share stateful logic between components
 
@@ -57,8 +60,9 @@ components/
 ## Component Lifecycle
 
 ### With Hooks
+
 ```jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const DataComponent = () => {
   const [data, setData] = useState(null);

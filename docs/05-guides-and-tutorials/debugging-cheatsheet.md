@@ -5,6 +5,7 @@ This file provides a comprehensive cheatsheet for debugging common issues across
 ## General Debugging Principles
 
 ### The Debugging Process
+
 1. **Reproduce** the issue consistently
 2. **Isolate** the problem area
 3. **Examine** logs and error messages
@@ -13,6 +14,7 @@ This file provides a comprehensive cheatsheet for debugging common issues across
 6. **Document** the solution
 
 ### Essential Debugging Tools
+
 - **Logging**: Add strategic log statements
 - **Debuggers**: Use IDE debuggers for step-through debugging
 - **Network Tools**: Monitor network requests/responses
@@ -24,32 +26,34 @@ This file provides a comprehensive cheatsheet for debugging common issues across
 ### Browser Developer Tools
 
 #### Console Debugging
+
 ```javascript
 // Basic logging
-console.log('Variable value:', variable);
-console.error('Error occurred:', error);
-console.warn('Warning message');
+console.log("Variable value:", variable);
+console.error("Error occurred:", error);
+console.warn("Warning message");
 
 // Object inspection
 console.table(arrayOfObjects);
 console.dir(complexObject);
 
 // Performance timing
-console.time('operation');
+console.time("operation");
 // ... code to measure
-console.timeEnd('operation');
+console.timeEnd("operation");
 
 // Stack trace
-console.trace('Execution path');
+console.trace("Execution path");
 
 // Group related logs
-console.group('API Calls');
-console.log('Request 1');
-console.log('Request 2');
+console.group("API Calls");
+console.log("Request 1");
+console.log("Request 2");
 console.groupEnd();
 ```
 
 #### Network Tab Analysis
+
 - Check request/response headers
 - Verify HTTP status codes
 - Inspect request payloads
@@ -57,41 +61,44 @@ console.groupEnd();
 - Look for CORS issues
 
 #### Elements Tab Tips
+
 ```javascript
 // Select element in console
-$0 // Currently selected element
-$1 // Previously selected element
+$0; // Currently selected element
+$1; // Previously selected element
 
 // Find elements
-$('selector') // querySelector
-$$('selector') // querySelectorAll
+$("selector"); // querySelector
+$$("selector"); // querySelectorAll
 
 // Monitor events
-monitorEvents($0, 'click');
+monitorEvents($0, "click");
 unmonitorEvents($0);
 ```
 
 ### React Debugging
 
 #### React Developer Tools
+
 ```javascript
 // Component debugging
-console.log('Props:', props);
-console.log('State:', state);
+console.log("Props:", props);
+console.log("State:", state);
 
 // Performance profiling
-import { Profiler } from 'react';
+import { Profiler } from "react";
 
 function onRenderCallback(id, phase, actualDuration) {
-  console.log('Component rendered:', { id, phase, actualDuration });
+  console.log("Component rendered:", { id, phase, actualDuration });
 }
 
 <Profiler id="MyComponent" onRender={onRenderCallback}>
   <MyComponent />
-</Profiler>
+</Profiler>;
 ```
 
 #### Common React Issues
+
 ```javascript
 // State not updating immediately
 const [count, setCount] = useState(0);
@@ -104,8 +111,8 @@ const handleClick = () => {
 
 // Correct - use functional update
 const handleClick = () => {
-  setCount(prev => {
-    console.log('New value:', prev + 1);
+  setCount((prev) => {
+    console.log("New value:", prev + 1);
     return prev + 1;
   });
 };
@@ -124,18 +131,20 @@ useEffect(() => {
 ## API Debugging
 
 ### HTTP Status Codes
-| Code | Meaning | Debug Actions |
-|------|---------|---------------|
-| 400 | Bad Request | Check request payload format |
-| 401 | Unauthorized | Verify authentication tokens |
-| 403 | Forbidden | Check user permissions |
-| 404 | Not Found | Verify URL and route configuration |
-| 429 | Too Many Requests | Implement rate limiting or backoff |
-| 500 | Internal Server Error | Check server logs |
-| 502 | Bad Gateway | Check proxy/load balancer config |
-| 503 | Service Unavailable | Check service health |
+
+| Code | Meaning               | Debug Actions                      |
+| ---- | --------------------- | ---------------------------------- |
+| 400  | Bad Request           | Check request payload format       |
+| 401  | Unauthorized          | Verify authentication tokens       |
+| 403  | Forbidden             | Check user permissions             |
+| 404  | Not Found             | Verify URL and route configuration |
+| 429  | Too Many Requests     | Implement rate limiting or backoff |
+| 500  | Internal Server Error | Check server logs                  |
+| 502  | Bad Gateway           | Check proxy/load balancer config   |
+| 503  | Service Unavailable   | Check service health               |
 
 ### curl Debugging Commands
+
 ```bash
 # Basic GET request
 curl -v https://api.example.com/users
@@ -162,6 +171,7 @@ curl -X DELETE https://api.example.com/resource/1
 ```
 
 ### Python Requests Debugging
+
 ```python
 import requests
 import logging
@@ -174,7 +184,7 @@ session = requests.Session()
 session.hooks['response'] = lambda r, *args, **kwargs: print(f"Response: {r.status_code}")
 
 # Debug specific request
-response = requests.get('https://api.example.com/users', 
+response = requests.get('https://api.example.com/users',
                        headers={'Authorization': 'Bearer token'})
 
 print(f"Status: {response.status_code}")
@@ -185,19 +195,20 @@ print(f"Content: {response.text}")
 ## Database Debugging
 
 ### PostgreSQL Debugging
+
 ```sql
 -- Check active connections
-SELECT pid, usename, application_name, client_addr, state, query 
-FROM pg_stat_activity 
+SELECT pid, usename, application_name, client_addr, state, query
+FROM pg_stat_activity
 WHERE state = 'active';
 
 -- Analyze slow queries
 EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'john@example.com';
 
 -- Check table sizes
-SELECT schemaname, tablename, 
+SELECT schemaname, tablename,
        pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-FROM pg_tables 
+FROM pg_tables
 WHERE schemaname = 'public'
 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 
@@ -216,15 +227,16 @@ WHERE NOT blocked_locks.granted;
 ```
 
 ### MongoDB Debugging
+
 ```javascript
 // Enable profiler
 db.setProfilingLevel(2);
 
 // Check slow operations
-db.system.profile.find().limit(5).sort({ts: -1});
+db.system.profile.find().limit(5).sort({ ts: -1 });
 
 // Explain query execution
-db.users.find({email: "john@example.com"}).explain("executionStats");
+db.users.find({ email: "john@example.com" }).explain("executionStats");
 
 // Check index usage
 db.users.getIndexes();
@@ -237,29 +249,31 @@ db.killOp(opId);
 ```
 
 ### SQL Query Optimization
+
 ```sql
 -- Use EXPLAIN to understand query execution
-EXPLAIN (ANALYZE, BUFFERS) 
-SELECT u.name, p.title 
-FROM users u 
-JOIN posts p ON u.id = p.user_id 
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT u.name, p.title
+FROM users u
+JOIN posts p ON u.id = p.user_id
 WHERE u.created_at > '2023-01-01';
 
 -- Check for missing indexes
-SELECT schemaname, tablename, attname, n_distinct, correlation 
-FROM pg_stats 
+SELECT schemaname, tablename, attname, n_distinct, correlation
+FROM pg_stats
 WHERE tablename = 'users';
 
 -- Monitor query performance
-SELECT query, calls, total_time, mean_time, rows 
-FROM pg_stat_statements 
-ORDER BY total_time DESC 
+SELECT query, calls, total_time, mean_time, rows
+FROM pg_stat_statements
+ORDER BY total_time DESC
 LIMIT 10;
 ```
 
 ## Docker & Container Debugging
 
 ### Container Inspection
+
 ```bash
 # List running containers
 docker ps
@@ -282,6 +296,7 @@ docker cp ./local/file container_name:/path/to/destination
 ```
 
 ### Docker Compose Debugging
+
 ```bash
 # View service logs
 docker-compose logs service_name
@@ -301,6 +316,7 @@ docker-compose run --rm service_name /bin/bash
 ```
 
 ### Container Health Checks
+
 ```dockerfile
 # Add health check to Dockerfile
 HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
@@ -313,13 +329,14 @@ docker inspect --format='{{.State.Health.Status}}' container_name
 ## Python Debugging
 
 ### Built-in Debugger (pdb)
+
 ```python
 import pdb
 
 def problematic_function(data):
     # Set breakpoint
     pdb.set_trace()
-    
+
     result = process_data(data)
     return result
 
@@ -335,6 +352,7 @@ def problematic_function(data):
 ```
 
 ### Logging for Debugging
+
 ```python
 import logging
 
@@ -352,7 +370,7 @@ logger = logging.getLogger(__name__)
 
 def debug_function(data):
     logger.debug(f"Function called with data: {data}")
-    
+
     try:
         result = risky_operation(data)
         logger.info(f"Operation successful: {result}")
@@ -370,6 +388,7 @@ logger.critical("Critical error")
 ```
 
 ### Python Exception Handling
+
 ```python
 import traceback
 import sys
@@ -379,11 +398,11 @@ try:
 except Exception as e:
     # Print full traceback
     traceback.print_exc()
-    
+
     # Get traceback as string
     error_details = traceback.format_exc()
     logger.error(f"Error details: {error_details}")
-    
+
     # Get exception info
     exc_type, exc_value, exc_traceback = sys.exc_info()
     print(f"Exception type: {exc_type.__name__}")
@@ -393,12 +412,13 @@ except Exception as e:
 ## Java Debugging
 
 ### Debugging with IDE
+
 ```java
 // Set breakpoints and use IDE debugger
 public class DebuggingExample {
     public static void main(String[] args) {
         List<String> items = Arrays.asList("a", "b", "c");
-        
+
         // Conditional breakpoint: right-click breakpoint, add condition
         for (int i = 0; i < items.size(); i++) {
             String item = items.get(i);
@@ -409,6 +429,7 @@ public class DebuggingExample {
 ```
 
 ### JVM Debugging
+
 ```bash
 # Enable remote debugging
 java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 MyApp
@@ -427,20 +448,21 @@ jstack pid   # Thread dump
 ```
 
 ### Spring Boot Debugging
+
 ```java
 @RestController
 public class DebugController {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(DebugController.class);
-    
+
     @GetMapping("/debug")
     public ResponseEntity<String> debugEndpoint() {
         logger.debug("Debug endpoint called");
-        
+
         // Log method parameters and return values
         String result = performOperation();
         logger.info("Operation result: {}", result);
-        
+
         return ResponseEntity.ok(result);
     }
 }
@@ -456,6 +478,7 @@ logging:
 ## Performance Debugging
 
 ### Frontend Performance
+
 ```javascript
 // Measure performance
 const start = performance.now();
@@ -466,15 +489,16 @@ console.log(`Operation took ${end - start} milliseconds`);
 // Monitor largest contentful paint
 new PerformanceObserver((list) => {
   for (const entry of list.getEntries()) {
-    console.log('LCP:', entry.startTime);
+    console.log("LCP:", entry.startTime);
   }
-}).observe({entryTypes: ['largest-contentful-paint']});
+}).observe({ entryTypes: ["largest-contentful-paint"] });
 
 // Check memory usage
-console.log('Memory usage:', performance.memory);
+console.log("Memory usage:", performance.memory);
 ```
 
 ### Backend Performance
+
 ```python
 import time
 import psutil
@@ -485,15 +509,15 @@ def monitor_performance(func):
     def wrapper(*args, **kwargs):
         start_time = time.time()
         start_memory = psutil.Process().memory_info().rss / 1024 / 1024
-        
+
         result = func(*args, **kwargs)
-        
+
         end_time = time.time()
         end_memory = psutil.Process().memory_info().rss / 1024 / 1024
-        
+
         print(f"{func.__name__} took {end_time - start_time:.2f} seconds")
         print(f"Memory usage: {end_memory - start_memory:.2f} MB")
-        
+
         return result
     return wrapper
 
@@ -506,6 +530,7 @@ def expensive_operation():
 ## Network Debugging
 
 ### Common Network Tools
+
 ```bash
 # Test connectivity
 ping google.com
@@ -532,6 +557,7 @@ wget --server-response https://example.com
 ```
 
 ### SSL/TLS Debugging
+
 ```bash
 # Test SSL connection
 openssl s_client -connect example.com:443
@@ -550,18 +576,21 @@ curl --sslv3 https://example.com
 ## Environment-Specific Debugging
 
 ### Development Environment
+
 - Use detailed logging
 - Enable all debugging features
 - Use development databases
 - Disable caching for real-time updates
 
 ### Staging Environment
+
 - Mirror production configuration
 - Use production-like data volumes
 - Enable monitoring and alerting
 - Test deployment procedures
 
 ### Production Environment
+
 - Implement proper logging levels
 - Use monitoring and alerting
 - Have rollback procedures ready
@@ -570,6 +599,7 @@ curl --sslv3 https://example.com
 ## Emergency Debugging Checklist
 
 ### When Everything is Down
+
 1. Check system status dashboard
 2. Review recent deployments
 3. Check monitoring alerts
@@ -580,6 +610,7 @@ curl --sslv3 https://example.com
 8. Check for DDoS or security incidents
 
 ### Quick Health Checks
+
 ```bash
 # System resources
 top

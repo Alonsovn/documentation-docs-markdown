@@ -5,24 +5,28 @@ This file covers various tools and approaches for creating comprehensive API doc
 ## Documentation Tools
 
 ### OpenAPI/Swagger
+
 - Industry standard for REST API documentation
 - Auto-generated from code annotations
 - Interactive documentation
 - Code generation capabilities
 
 ### Insomnia
+
 - API client and documentation tool
 - Similar to Postman
 - Good for GraphQL APIs
 - Clean, modern interface
 
 ### Redoc
+
 - Beautiful API documentation from OpenAPI specs
 - Responsive design
 - Three-panel layout
 - Easy customization
 
 ### GitBook
+
 - General documentation platform
 - Good for comprehensive guides
 - Collaborative editing
@@ -42,15 +46,15 @@ paths:
     get:
       summary: Get all users
       responses:
-        '200':
+        "200":
           description: List of users
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-    
+                  $ref: "#/components/schemas/User"
+
     post:
       summary: Create a user
       requestBody:
@@ -58,9 +62,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUser'
+              $ref: "#/components/schemas/CreateUser"
       responses:
-        '201':
+        "201":
           description: User created successfully
 
 components:
@@ -82,6 +86,7 @@ components:
 ## Documentation Best Practices
 
 ### Content
+
 - Clear, concise descriptions
 - Real-world examples
 - Error response documentation
@@ -89,6 +94,7 @@ components:
 - Rate limiting information
 
 ### Structure
+
 - Logical organization
 - Consistent formatting
 - Search functionality
@@ -96,6 +102,7 @@ components:
 - Change logs
 
 ### Interactive Elements
+
 - Try-it-now functionality
 - Code samples in multiple languages
 - Request/response examples
@@ -103,9 +110,9 @@ components:
 
 ## Tools Comparison
 
-| Tool | Best For | Pros | Cons |
-|------|----------|------|------|
-| Swagger UI | OpenAPI specs | Auto-generated, Interactive | Limited customization |
-| Redoc | OpenAPI specs | Beautiful design | OpenAPI only |
-| Insomnia | GraphQL/REST | Great UX | Smaller ecosystem |
-| GitBook | Comprehensive docs | Collaborative | Not API-specific |
+| Tool       | Best For           | Pros                        | Cons                  |
+| ---------- | ------------------ | --------------------------- | --------------------- |
+| Swagger UI | OpenAPI specs      | Auto-generated, Interactive | Limited customization |
+| Redoc      | OpenAPI specs      | Beautiful design            | OpenAPI only          |
+| Insomnia   | GraphQL/REST       | Great UX                    | Smaller ecosystem     |
+| GitBook    | Comprehensive docs | Collaborative               | Not API-specific      |

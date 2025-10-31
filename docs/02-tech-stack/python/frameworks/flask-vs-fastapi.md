@@ -8,14 +8,14 @@ Both Flask and FastAPI are popular Python web frameworks, each with its own stre
 
 ## Feature Comparison
 
-| Feature | Flask | FastAPI |
-|---------|--------|---------|
-| Performance | Moderate | High |
-| Learning Curve | Easy | Moderate |
-| Type Hints | Optional | Built-in |
-| API Documentation | Manual | Automatic |
-| Async Support | Limited | Native |
-| Ecosystem | Mature | Growing |
+| Feature           | Flask    | FastAPI   |
+| ----------------- | -------- | --------- |
+| Performance       | Moderate | High      |
+| Learning Curve    | Easy     | Moderate  |
+| Type Hints        | Optional | Built-in  |
+| API Documentation | Manual   | Automatic |
+| Async Support     | Limited  | Native    |
+| Ecosystem         | Mature   | Growing   |
 
 ## Flask Strengths
 

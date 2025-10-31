@@ -5,12 +5,14 @@ This file covers best practices for implementing continuous integration and cont
 ## CI/CD Overview
 
 ### Continuous Integration (CI)
+
 - Automated testing on code changes
 - Code quality checks
 - Build verification
 - Merge conflict prevention
 
 ### Continuous Deployment (CD)
+
 - Automated deployment to staging/production
 - Environment management
 - Rollback capabilities
@@ -19,6 +21,7 @@ This file covers best practices for implementing continuous integration and cont
 ## Pipeline Stages
 
 ### 1. Source Control Integration
+
 ```yaml
 # Trigger on specific events
 on:
@@ -29,6 +32,7 @@ on:
 ```
 
 ### 2. Build Stage
+
 ```yaml
 build:
   runs-on: ubuntu-latest
@@ -37,8 +41,8 @@ build:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '18'
-        cache: 'npm'
+        node-version: "18"
+        cache: "npm"
     - name: Install dependencies
       run: npm ci
     - name: Build application
@@ -46,6 +50,7 @@ build:
 ```
 
 ### 3. Test Stage
+
 ```yaml
 test:
   runs-on: ubuntu-latest
@@ -60,6 +65,7 @@ test:
 ```
 
 ### 4. Quality Checks
+
 ```yaml
 quality:
   runs-on: ubuntu-latest
@@ -75,6 +81,7 @@ quality:
 ```
 
 ### 5. Deployment Stage
+
 ```yaml
 deploy:
   runs-on: ubuntu-latest
@@ -97,6 +104,7 @@ deploy:
 ## Best Practices
 
 ### Pipeline Design
+
 - Keep pipelines fast and efficient
 - Use parallel execution where possible
 - Implement proper error handling
@@ -104,6 +112,7 @@ deploy:
 - Document pipeline configuration
 
 ### Environment Management
+
 ```yaml
 environments:
   staging:
@@ -118,6 +127,7 @@ environments:
 ```
 
 ### Secret Management
+
 ```yaml
 steps:
   - name: Deploy with secrets
@@ -128,6 +138,7 @@ steps:
 ```
 
 ### Testing Strategy
+
 - Unit tests (fast, isolated)
 - Integration tests (component interactions)
 - End-to-end tests (full user workflows)
@@ -137,17 +148,20 @@ steps:
 ## Deployment Strategies
 
 ### Blue-Green Deployment
+
 - Two identical production environments
 - Switch traffic between environments
 - Zero downtime deployments
 - Easy rollback
 
 ### Rolling Deployment
+
 - Gradual replacement of instances
 - Maintains service availability
 - Slower rollback process
 
 ### Canary Deployment
+
 - Deploy to subset of users
 - Monitor metrics and errors
 - Gradual traffic increase
@@ -156,18 +170,21 @@ steps:
 ## Monitoring and Alerting
 
 ### Pipeline Monitoring
+
 - Build success/failure rates
 - Test coverage trends
 - Deployment frequency
 - Mean time to recovery
 
 ### Application Monitoring
+
 - Health checks
 - Performance metrics
 - Error rates
 - User experience metrics
 
 ### Alerting Rules
+
 - Failed deployments
 - Test failures
 - Performance degradation

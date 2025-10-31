@@ -5,13 +5,14 @@ This file explores common design patterns in Python with practical examples and 
 ## Creational Patterns
 
 ### Singleton Pattern
+
 Ensures only one instance of a class exists throughout the application.
 
 ```python
 class DatabaseConnection:
     _instance = None
     _lock = threading.Lock()
-    
+
     def __new__(cls):
         if cls._instance is None:
             with cls._lock:
@@ -19,13 +20,13 @@ class DatabaseConnection:
                     cls._instance = super().__new__(cls)
                     cls._instance._initialized = False
         return cls._instance
-    
+
     def __init__(self):
         if self._initialized:
             return
         self.connection = None
         self._initialized = True
-    
+
     def connect(self):
         if not self.connection:
             self.connection = psycopg2.connect(DATABASE_URL)
@@ -49,12 +50,13 @@ def singleton(cls):
 class Logger:
     def __init__(self):
         self.logs = []
-    
+
     def log(self, message):
         self.logs.append(f"{datetime.now()}: {message}")
 ```
 
 ### Factory Pattern
+
 Creates objects without specifying their exact classes.
 
 ```python
@@ -64,7 +66,7 @@ class DatabaseAdapter(ABC):
     @abstractmethod
     def connect(self):
         pass
-    
+
     @abstractmethod
     def execute(self, query):
         pass
@@ -72,7 +74,7 @@ class DatabaseAdapter(ABC):
 class PostgreSQLAdapter(DatabaseAdapter):
     def connect(self):
         return psycopg2.connect(self.connection_string)
-    
+
     def execute(self, query):
         with self.connect() as conn:
             return conn.execute(query)
@@ -80,7 +82,7 @@ class PostgreSQLAdapter(DatabaseAdapter):
 class MySQLAdapter(DatabaseAdapter):
     def connect(self):
         return mysql.connector.connect(self.connection_string)
-    
+
     def execute(self, query):
         with self.connect() as conn:
             return conn.execute(query)
@@ -92,11 +94,11 @@ class DatabaseFactory:
             'postgresql': PostgreSQLAdapter,
             'mysql': MySQLAdapter,
         }
-        
+
         adapter_class = adapters.get(db_type.lower())
         if not adapter_class:
             raise ValueError(f"Unsupported database type: {db_type}")
-        
+
         return adapter_class()
 
 # Usage
@@ -105,13 +107,14 @@ result = db_adapter.execute("SELECT * FROM users")
 ```
 
 ### Builder Pattern
+
 Constructs complex objects step by step.
 
 ```python
 class QueryBuilder:
     def __init__(self):
         self.reset()
-    
+
     def reset(self):
         self._query = {
             'select': [],
@@ -122,62 +125,62 @@ class QueryBuilder:
             'limit': None
         }
         return self
-    
+
     def select(self, *fields):
         self._query['select'].extend(fields)
         return self
-    
+
     def from_table(self, table):
         self._query['from'] = table
         return self
-    
+
     def join(self, table, condition):
         self._query['join'].append(f"JOIN {table} ON {condition}")
         return self
-    
+
     def where(self, condition):
         self._query['where'].append(condition)
         return self
-    
+
     def order_by(self, field, direction='ASC'):
         self._query['order_by'].append(f"{field} {direction}")
         return self
-    
+
     def limit(self, count):
         self._query['limit'] = count
         return self
-    
+
     def build(self):
         if not self._query['from']:
             raise ValueError("FROM clause is required")
-        
+
         query_parts = []
-        
+
         # SELECT
         select_clause = "SELECT " + (", ".join(self._query['select']) or "*")
         query_parts.append(select_clause)
-        
+
         # FROM
         query_parts.append(f"FROM {self._query['from']}")
-        
+
         # JOIN
         if self._query['join']:
             query_parts.extend(self._query['join'])
-        
+
         # WHERE
         if self._query['where']:
             where_clause = "WHERE " + " AND ".join(self._query['where'])
             query_parts.append(where_clause)
-        
+
         # ORDER BY
         if self._query['order_by']:
             order_clause = "ORDER BY " + ", ".join(self._query['order_by'])
             query_parts.append(order_clause)
-        
+
         # LIMIT
         if self._query['limit']:
             query_parts.append(f"LIMIT {self._query['limit']}")
-        
+
         return " ".join(query_parts)
 
 # Usage
@@ -192,14 +195,15 @@ query = (QueryBuilder()
          .build())
 
 print(query)
-# SELECT name, email FROM users JOIN profiles ON users.id = profiles.user_id 
-# WHERE users.active = true AND profiles.verified = true 
+# SELECT name, email FROM users JOIN profiles ON users.id = profiles.user_id
+# WHERE users.active = true AND profiles.verified = true
 # ORDER BY users.created_at DESC LIMIT 10
 ```
 
 ## Structural Patterns
 
 ### Adapter Pattern
+
 Allows incompatible interfaces to work together.
 
 ```python
@@ -214,7 +218,7 @@ class ModernPaymentSystem:
 class PaymentAdapter:
     def __init__(self, legacy_system: LegacyPaymentSystem):
         self.legacy_system = legacy_system
-    
+
     def process_payment(self, amount, currency='USD'):
         # Convert modern interface to legacy interface
         if currency != 'USD':
@@ -232,6 +236,7 @@ print(result)  # Legacy payment of $100 processed
 ```
 
 ### Decorator Pattern
+
 Adds behavior to objects dynamically without altering their structure.
 
 ```python
@@ -271,7 +276,7 @@ def retry(max_attempts=3, delay=1):
 def log_calls(logger=None):
     if logger is None:
         logger = logging.getLogger(__name__)
-    
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -292,18 +297,18 @@ class RateLimiter:
         self.max_calls = max_calls
         self.time_window = time_window
         self.calls = []
-    
+
     def __call__(self, func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             now = time.time()
             # Remove old calls outside time window
-            self.calls = [call_time for call_time in self.calls 
+            self.calls = [call_time for call_time in self.calls
                          if now - call_time < self.time_window]
-            
+
             if len(self.calls) >= self.max_calls:
                 raise Exception("Rate limit exceeded")
-            
+
             self.calls.append(now)
             return func(*args, **kwargs)
         return wrapper
@@ -321,6 +326,7 @@ def api_call(endpoint):
 ```
 
 ### Facade Pattern
+
 Provides a simplified interface to a complex subsystem.
 
 ```python
@@ -341,28 +347,28 @@ class NotificationFacade:
         self.email_service = EmailService()
         self.sms_service = SMSService()
         self.push_service = PushNotificationService()
-    
+
     def notify_user(self, user, message, channels=None):
         if channels is None:
             channels = ['email']  # Default channel
-        
+
         if 'email' in channels and user.email:
             self.email_service.send_email(
-                user.email, 
-                "Notification", 
+                user.email,
+                "Notification",
                 message
             )
-        
+
         if 'sms' in channels and user.phone:
             self.sms_service.send_sms(user.phone, message)
-        
+
         if 'push' in channels and user.device_id:
             self.push_service.send_push(user.device_id, message)
-    
+
     def send_welcome_message(self, user):
         welcome_msg = f"Welcome {user.name}! Thanks for joining us."
         self.notify_user(user, welcome_msg, ['email', 'push'])
-    
+
     def send_urgent_alert(self, user, alert_message):
         self.notify_user(user, alert_message, ['email', 'sms', 'push'])
 
@@ -375,6 +381,7 @@ notification_system.send_welcome_message(user)
 ## Behavioral Patterns
 
 ### Observer Pattern
+
 Defines a one-to-many dependency between objects.
 
 ```python
@@ -389,15 +396,15 @@ class Observer(ABC):
 class Subject:
     def __init__(self):
         self._observers: List[Observer] = []
-    
+
     def attach(self, observer: Observer):
         if observer not in self._observers:
             self._observers.append(observer)
-    
+
     def detach(self, observer: Observer):
         if observer in self._observers:
             self._observers.remove(observer)
-    
+
     def notify(self, event_data=None):
         for observer in self._observers:
             observer.update(self, event_data)
@@ -408,11 +415,11 @@ class User(Subject):
         self.name = name
         self.email = email
         self._status = "offline"
-    
+
     @property
     def status(self):
         return self._status
-    
+
     @status.setter
     def status(self, value):
         old_status = self._status
@@ -433,7 +440,7 @@ class EmailNotifier(Observer):
 class ActivityLogger(Observer):
     def __init__(self):
         self.log = []
-    
+
     def update(self, subject, event_data):
         if event_data['event'] == 'status_changed':
             user = event_data['user']
@@ -454,6 +461,7 @@ user.status = "away"     # Triggers notifications
 ```
 
 ### Strategy Pattern
+
 Defines a family of algorithms and makes them interchangeable.
 
 ```python
@@ -469,14 +477,14 @@ class CreditCardPayment(PaymentStrategy):
         self.card_number = card_number
         self.cvv = cvv
         self.expiry = expiry
-    
+
     def pay(self, amount):
         return f"Paid ${amount} using Credit Card ending in {self.card_number[-4:]}"
 
 class PayPalPayment(PaymentStrategy):
     def __init__(self, email):
         self.email = email
-    
+
     def pay(self, amount):
         return f"Paid ${amount} using PayPal account {self.email}"
 
@@ -484,17 +492,17 @@ class CryptoPayment(PaymentStrategy):
     def __init__(self, wallet_address, currency):
         self.wallet_address = wallet_address
         self.currency = currency
-    
+
     def pay(self, amount):
         return f"Paid {amount} {self.currency} to wallet {self.wallet_address[:8]}..."
 
 class PaymentProcessor:
     def __init__(self):
         self._strategy = None
-    
+
     def set_payment_method(self, strategy: PaymentStrategy):
         self._strategy = strategy
-    
+
     def process_payment(self, amount):
         if not self._strategy:
             raise ValueError("Payment method not set")
@@ -517,6 +525,7 @@ print(result2)
 ```
 
 ### Command Pattern
+
 Encapsulates requests as objects, allowing you to parameterize clients with different requests.
 
 ```python
@@ -527,7 +536,7 @@ class Command(ABC):
     @abstractmethod
     def execute(self):
         pass
-    
+
     @abstractmethod
     def undo(self):
         pass
@@ -536,11 +545,11 @@ class Light:
     def __init__(self, location):
         self.location = location
         self.is_on = False
-    
+
     def turn_on(self):
         self.is_on = True
         print(f"{self.location} light is ON")
-    
+
     def turn_off(self):
         self.is_on = False
         print(f"{self.location} light is OFF")
@@ -548,31 +557,31 @@ class Light:
 class LightOnCommand(Command):
     def __init__(self, light: Light):
         self.light = light
-    
+
     def execute(self):
         self.light.turn_on()
-    
+
     def undo(self):
         self.light.turn_off()
 
 class LightOffCommand(Command):
     def __init__(self, light: Light):
         self.light = light
-    
+
     def execute(self):
         self.light.turn_off()
-    
+
     def undo(self):
         self.light.turn_on()
 
 class MacroCommand(Command):
     def __init__(self, commands: List[Command]):
         self.commands = commands
-    
+
     def execute(self):
         for command in self.commands:
             command.execute()
-    
+
     def undo(self):
         # Undo in reverse order
         for command in reversed(self.commands):
@@ -582,16 +591,16 @@ class RemoteControl:
     def __init__(self):
         self.commands = {}
         self.last_command = None
-    
+
     def set_command(self, slot, command: Command):
         self.commands[slot] = command
-    
+
     def press_button(self, slot):
         if slot in self.commands:
             command = self.commands[slot]
             command.execute()
             self.last_command = command
-    
+
     def press_undo(self):
         if self.last_command:
             self.last_command.undo()
@@ -622,6 +631,7 @@ remote.press_undo()     # Undo party mode - turn off all lights
 ## Python-Specific Patterns
 
 ### Context Manager Pattern
+
 Manages resources properly using the `with` statement.
 
 ```python
@@ -631,7 +641,7 @@ class DatabaseConnection:
         self.port = port
         self.database = database
         self.connection = None
-    
+
     def __enter__(self):
         self.connection = psycopg2.connect(
             host=self.host,
@@ -639,7 +649,7 @@ class DatabaseConnection:
             database=self.database
         )
         return self.connection
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.connection:
             if exc_type is None:
@@ -675,6 +685,7 @@ with timer_context("Database query"):
 ```
 
 ### Dependency Injection Pattern
+
 Provides dependencies from external sources rather than creating them internally.
 
 ```python
@@ -685,7 +696,7 @@ class Repository(ABC):
     @abstractmethod
     def save(self, entity):
         pass
-    
+
     @abstractmethod
     def find_by_id(self, id):
         pass
@@ -693,11 +704,11 @@ class Repository(ABC):
 class DatabaseRepository(Repository):
     def __init__(self, connection):
         self.connection = connection
-    
+
     def save(self, entity):
         # Database save logic
         print(f"Saving {entity} to database")
-    
+
     def find_by_id(self, id):
         # Database query logic
         print(f"Finding entity with id {id} from database")
@@ -706,23 +717,23 @@ class DatabaseRepository(Repository):
 class InMemoryRepository(Repository):
     def __init__(self):
         self.data = {}
-    
+
     def save(self, entity):
         self.data[entity.id] = entity
         print(f"Saving {entity} to memory")
-    
+
     def find_by_id(self, id):
         return self.data.get(id)
 
 class UserService:
     def __init__(self, repository: Repository):
         self.repository = repository
-    
+
     def create_user(self, user_data):
         user = User(user_data)
         self.repository.save(user)
         return user
-    
+
     def get_user(self, user_id):
         return self.repository.find_by_id(user_id)
 
@@ -731,29 +742,29 @@ class DIContainer:
     def __init__(self):
         self._services: Dict[str, Any] = {}
         self._singletons: Dict[str, Any] = {}
-    
+
     def register(self, name: str, factory, singleton=False):
         self._services[name] = (factory, singleton)
-    
+
     def get(self, name: str):
         if name not in self._services:
             raise ValueError(f"Service '{name}' not registered")
-        
+
         factory, is_singleton = self._services[name]
-        
+
         if is_singleton:
             if name not in self._singletons:
                 self._singletons[name] = factory()
             return self._singletons[name]
-        
+
         return factory()
 
 # Setup container
 container = DIContainer()
-container.register('repository', 
-                  lambda: DatabaseRepository(connection="db_conn"), 
+container.register('repository',
+                  lambda: DatabaseRepository(connection="db_conn"),
                   singleton=True)
-container.register('user_service', 
+container.register('user_service',
                   lambda: UserService(container.get('repository')))
 
 # Usage
@@ -801,16 +812,16 @@ class UserService:
         self.repository = repository
         self.email_service = email_service
         self.logger = logger
-    
+
     def create_user(self, data):
         if not self.validator.validate(data):
             raise ValidationError("Invalid user data")
-        
+
         user = User(data)
         self.repository.save(user)
         self.email_service.send_welcome_email(user)
         self.logger.log_user_creation(user)
-        
+
         return user
 ```
 
@@ -824,17 +835,17 @@ class TestUserService:
         mock_repository = Mock(spec=Repository)
         mock_email_service = Mock()
         mock_logger = Mock()
-        
+
         user_service = UserService(
             validator=AlwaysValidValidator(),
             repository=mock_repository,
             email_service=mock_email_service,
             logger=mock_logger
         )
-        
+
         # Act
         user = user_service.create_user({'name': 'Test', 'email': 'test@example.com'})
-        
+
         # Assert
         mock_repository.save.assert_called_once()
         mock_email_service.send_welcome_email.assert_called_once_with(user)

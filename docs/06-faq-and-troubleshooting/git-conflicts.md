@@ -5,7 +5,9 @@ This file provides comprehensive guidance on understanding, preventing, and reso
 ## Understanding Git Conflicts
 
 ### What are Git Conflicts?
+
 Git conflicts occur when Git cannot automatically merge changes from different branches or commits. This happens when:
+
 - The same line in a file has been modified differently in two branches
 - One branch deletes a file that another branch modifies
 - Binary files are modified in both branches
@@ -13,6 +15,7 @@ Git conflicts occur when Git cannot automatically merge changes from different b
 ### Types of Conflicts
 
 #### Content Conflicts
+
 ```bash
 Auto-merging file.txt
 CONFLICT (content): Merge conflict in file.txt
@@ -20,11 +23,13 @@ Automatic merge failed; fix conflicts and then commit the result.
 ```
 
 #### Rename/Delete Conflicts
+
 ```bash
 CONFLICT (modify/delete): file.txt deleted in branch-a and modified in HEAD.
 ```
 
 #### Add/Add Conflicts
+
 ```bash
 CONFLICT (add/add): Merge conflict in file.txt
 ```
@@ -32,6 +37,7 @@ CONFLICT (add/add): Merge conflict in file.txt
 ## Identifying Conflicts
 
 ### Check Status
+
 ```bash
 # See which files have conflicts
 git status
@@ -45,7 +51,9 @@ git status
 ```
 
 ### View Conflict Markers
+
 When Git encounters a conflict, it marks the conflicting sections in the file:
+
 ```
 <<<<<<< HEAD (Current Change)
 const message = "Hello from main branch";
@@ -59,6 +67,7 @@ const message = "Hello from feature branch";
 ### Best Practices
 
 #### Keep Branches Short-Lived
+
 ```bash
 # Create feature branch
 git checkout -b feature/quick-fix
@@ -69,6 +78,7 @@ git branch -d feature/quick-fix
 ```
 
 #### Regular Synchronization
+
 ```bash
 # Frequently pull from main
 git checkout main
@@ -80,12 +90,14 @@ git rebase main
 ```
 
 #### Coordinate Team Changes
+
 - Communicate about files being modified
 - Use separate files/modules when possible
 - Plan refactoring activities together
 - Use feature flags for large changes
 
 #### Use .gitattributes for Binary Files
+
 ```bash
 # .gitattributes
 *.png binary
@@ -99,6 +111,7 @@ git rebase main
 ### Manual Resolution
 
 #### Step 1: Identify Conflicted Files
+
 ```bash
 git status
 # or
@@ -106,6 +119,7 @@ git diff --name-only --diff-filter=U
 ```
 
 #### Step 2: Open and Edit Files
+
 ```javascript
 // Before resolution
 function greet() {
@@ -123,6 +137,7 @@ function greet() {
 ```
 
 #### Step 3: Mark as Resolved
+
 ```bash
 # Add the resolved file
 git add src/main.js
@@ -132,6 +147,7 @@ git status
 ```
 
 #### Step 4: Complete the Merge
+
 ```bash
 # Commit the merge
 git commit -m "Resolve merge conflicts in src/main.js"
@@ -143,6 +159,7 @@ git rebase --continue
 ### Using Merge Tools
 
 #### Configure Merge Tool
+
 ```bash
 # Set up VS Code as merge tool
 git config --global merge.tool vscode
@@ -158,13 +175,14 @@ git config --global mergetool.p4merge.path "/Applications/p4merge.app/Contents/M
 ```
 
 #### Use Merge Tool
+
 ```bash
 # Launch merge tool for conflicts
 git mergetool
 
 # This will open your configured tool with three panels:
 # - LOCAL (your changes)
-# - BASE (common ancestor)  
+# - BASE (common ancestor)
 # - REMOTE (their changes)
 # - MERGED (result)
 ```
@@ -172,6 +190,7 @@ git mergetool
 ### IDE Integration
 
 #### VS Code
+
 1. Install GitLens extension
 2. Open conflicted file
 3. Use "Accept Current Change", "Accept Incoming Change", or "Accept Both Changes"
@@ -179,6 +198,7 @@ git mergetool
 5. Save file and stage changes
 
 #### IntelliJ IDEA
+
 1. Go to VCS → Git → Resolve Conflicts
 2. Select conflicted files
 3. Use the merge dialog with three panels
@@ -188,6 +208,7 @@ git mergetool
 ## Advanced Conflict Resolution
 
 ### Interactive Rebase
+
 ```bash
 # Start interactive rebase
 git rebase -i HEAD~3
@@ -204,6 +225,7 @@ pick ghi789 Third commit
 ```
 
 ### Cherry-pick Conflicts
+
 ```bash
 # Cherry-pick commit with conflicts
 git cherry-pick abc123
@@ -219,6 +241,7 @@ git cherry-pick --abort
 ### Merge vs Rebase Conflicts
 
 #### Merge Strategy
+
 ```bash
 git checkout feature-branch
 git merge main
@@ -229,6 +252,7 @@ git commit -m "Merge main into feature-branch"
 ```
 
 #### Rebase Strategy
+
 ```bash
 git checkout feature-branch
 git rebase main
@@ -244,6 +268,7 @@ git rebase --continue
 ## Conflict Resolution Strategies
 
 ### Taking One Side Completely
+
 ```bash
 # Take your version (current branch)
 git checkout --ours conflicted-file.txt
@@ -257,6 +282,7 @@ git merge -X theirs feature-branch
 ```
 
 ### Partial Resolution
+
 ```javascript
 // Original conflict
 function calculateTotal(items) {
@@ -274,7 +300,9 @@ function calculateTotal(items) {
 ```
 
 ### Complex Conflicts
+
 For files with multiple conflict sections:
+
 ```bash
 # Show all conflicts in file
 git diff conflicted-file.txt
@@ -286,6 +314,7 @@ grep -n "<<<<<<< HEAD" src/**/*.js
 ## Aborting and Resetting
 
 ### Abort Operations
+
 ```bash
 # Abort merge
 git merge --abort
@@ -301,6 +330,7 @@ git reset --hard HEAD~1
 ```
 
 ### Emergency Reset
+
 ```bash
 # Find the commit hash before the problematic merge
 git reflog
@@ -315,17 +345,19 @@ git push --force-with-lease origin branch-name
 ## Binary File Conflicts
 
 ### Understanding Binary Conflicts
+
 ```bash
 # Git cannot merge binary files automatically
 warning: Cannot merge binary files: image.png (HEAD vs. feature-branch)
 ```
 
 ### Resolving Binary Conflicts
+
 ```bash
 # Choose version from current branch
 git checkout --ours image.png
 
-# Choose version from incoming branch  
+# Choose version from incoming branch
 git checkout --theirs image.png
 
 # Add resolved file
@@ -333,6 +365,7 @@ git add image.png
 ```
 
 ### Preventing Binary Conflicts
+
 - Use version control for source files, not generated files
 - Store binary assets in separate repositories
 - Use Git LFS for large binary files
@@ -343,6 +376,7 @@ git add image.png
 ### Conflict Resolution in Pull Requests
 
 #### GitHub Workflow
+
 1. Create pull request
 2. If conflicts exist, GitHub will show "This branch has conflicts"
 3. Options:
@@ -350,6 +384,7 @@ git add image.png
    - Resolve locally and push
 
 #### Local Resolution for PR
+
 ```bash
 # Sync with target branch
 git checkout main
@@ -368,6 +403,7 @@ git push origin feature-branch
 ```
 
 ### Code Review with Conflicts
+
 - Resolve conflicts before requesting review
 - Document complex resolution decisions
 - Consider splitting large conflicted changes
@@ -376,6 +412,7 @@ git push origin feature-branch
 ## Automated Conflict Resolution
 
 ### Git Rerere
+
 ```bash
 # Enable rerere (reuse recorded resolution)
 git config --global rerere.enabled true
@@ -385,6 +422,7 @@ git config --global rerere.enabled true
 ```
 
 ### Custom Merge Drivers
+
 ```bash
 # .gitattributes
 *.generated merge=ours
@@ -399,6 +437,7 @@ git config --global rerere.enabled true
 ### Common Issues
 
 #### "Already up to date" but conflicts exist
+
 ```bash
 # Check if you're on the right branch
 git branch
@@ -411,6 +450,7 @@ git status
 ```
 
 #### Conflicts keep reappearing
+
 ```bash
 # Check if rerere is causing issues
 git config --get rerere.enabled
@@ -423,6 +463,7 @@ git config --get-regexp merge
 ```
 
 #### Lost changes during conflict resolution
+
 ```bash
 # Check reflog for lost commits
 git reflog
@@ -437,12 +478,14 @@ git checkout -b recovery-branch abc123
 ### Best Practices Summary
 
 1. **Prevention**
+
    - Keep branches small and short-lived
    - Regular synchronization with main branch
    - Good communication within team
    - Use appropriate .gitattributes
 
 2. **Resolution**
+
    - Understand the conflict before resolving
    - Test the resolution thoroughly
    - Document complex resolution decisions
@@ -455,6 +498,7 @@ git checkout -b recovery-branch abc123
    - Train team members on conflict resolution
 
 ### Emergency Contacts
+
 - For critical production merges: Contact senior developer or team lead
 - For complex architectural conflicts: Involve system architect
 - For data-related conflicts: Involve database administrator

@@ -25,6 +25,7 @@ This documentation is organized into eight main sections:
 ## Contributing
 
 This documentation is a living resource. Please contribute by:
+
 - Submitting updates and corrections
 - Adding new content where needed
 - Sharing feedback and suggestions
@@ -33,6 +34,7 @@ This documentation is a living resource. Please contribute by:
 ## Feedback
 
 Your feedback helps us improve. Please share your thoughts on:
+
 - Content clarity and usefulness
 - Missing topics or information
 - Suggestions for improvement

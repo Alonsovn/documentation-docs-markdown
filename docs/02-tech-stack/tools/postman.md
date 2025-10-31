@@ -18,6 +18,7 @@ Postman is a popular API development platform that simplifies the process of bui
 ## Getting Started
 
 ### Making a Request
+
 1. Select HTTP method (GET, POST, PUT, DELETE)
 2. Enter request URL
 3. Add headers if needed
@@ -25,6 +26,7 @@ Postman is a popular API development platform that simplifies the process of bui
 5. Send request and view response
 
 ### Example Request
+
 ```
 Method: POST
 URL: https://api.example.com/users
@@ -42,12 +44,14 @@ Body:
 ## Collections and Environments
 
 ### Creating Collections
+
 - Group related API requests
 - Add folders for organization
 - Share with team members
 - Export/import for backup
 
 ### Environment Variables
+
 ```json
 {
   "base_url": "https://api.staging.example.com",
@@ -59,22 +63,23 @@ Body:
 ## Testing with Postman
 
 ### Basic Tests
+
 ```javascript
 // Status code test
 pm.test("Status code is 200", function () {
-    pm.response.to.have.status(200);
+  pm.response.to.have.status(200);
 });
 
 // Response time test
 pm.test("Response time is less than 200ms", function () {
-    pm.expect(pm.response.responseTime).to.be.below(200);
+  pm.expect(pm.response.responseTime).to.be.below(200);
 });
 
 // Response body test
 pm.test("Response has user data", function () {
-    const responseJson = pm.response.json();
-    pm.expect(responseJson).to.have.property('name');
-    pm.expect(responseJson.name).to.eql('John Doe');
+  const responseJson = pm.response.json();
+  pm.expect(responseJson).to.have.property("name");
+  pm.expect(responseJson.name).to.eql("John Doe");
 });
 ```
 

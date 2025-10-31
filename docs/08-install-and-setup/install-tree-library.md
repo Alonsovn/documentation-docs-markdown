@@ -70,13 +70,17 @@ The `tree` command-line utility allows you to visualize directory structures in 
 ## Usage Example
 
 ### Command:
+
 To display the directory tree of the current folder, simply run:
+
 ```bash
 tree
 ```
 
 ### Output Example:
+
 Here is an example output for a directory containing multiple files and subdirectories:
+
 ```
 .
 ├── LICENSE
@@ -133,4 +137,5 @@ Here is an example output for a directory containing multiple files and subdirec
 
 17 directories, 44 files
 ```
+
 ---

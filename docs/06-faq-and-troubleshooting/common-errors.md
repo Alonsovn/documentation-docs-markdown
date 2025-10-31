@@ -7,10 +7,13 @@ This file documents common errors encountered during development and their solut
 ### Node.js / npm Errors
 
 #### Error: Module not found
+
 ```bash
 Error: Cannot find module 'some-package'
 ```
+
 **Solutions:**
+
 ```bash
 # Clear npm cache
 npm cache clean --force
@@ -27,10 +30,13 @@ npm list some-package
 ```
 
 #### Error: Permission denied (EACCES)
+
 ```bash
 Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules'
 ```
+
 **Solutions:**
+
 ```bash
 # Fix npm permissions (recommended)
 mkdir ~/.npm-global
@@ -44,10 +50,13 @@ nvm install node
 ```
 
 #### Error: Heap out of memory
+
 ```bash
 FATAL ERROR: Ineffective mark-compacts near heap limit
 ```
+
 **Solutions:**
+
 ```bash
 # Increase Node.js memory limit
 node --max-old-space-size=4096 your-script.js
@@ -64,10 +73,13 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 ### Python Errors
 
 #### ImportError: No module named 'package'
+
 ```python
 ImportError: No module named 'requests'
 ```
+
 **Solutions:**
+
 ```bash
 # Install missing package
 pip install requests
@@ -85,20 +97,26 @@ pip show requests
 ```
 
 #### SyntaxError: invalid syntax
+
 ```python
 SyntaxError: invalid syntax
 ```
+
 **Common Causes and Solutions:**
+
 - **Python version mismatch**: Check `python --version`, use correct version
 - **Indentation errors**: Use consistent spaces or tabs (prefer 4 spaces)
 - **Missing parentheses**: f-strings require Python 3.6+
 - **Encoding issues**: Add `# -*- coding: utf-8 -*-` at file top
 
 #### ModuleNotFoundError with relative imports
+
 ```python
 ModuleNotFoundError: No module named 'mymodule'
 ```
+
 **Solutions:**
+
 ```bash
 # Run as module instead of script
 python -m mypackage.myscript
@@ -113,10 +131,13 @@ from mypackage.mymodule import MyClass
 ### Java Errors
 
 #### ClassNotFoundException
+
 ```java
 Exception in thread "main" java.lang.ClassNotFoundException: com.example.MyClass
 ```
+
 **Solutions:**
+
 ```bash
 # Check classpath
 java -cp "/path/to/classes:/path/to/libs/*" com.example.MyClass
@@ -130,10 +151,13 @@ mvn clean compile
 ```
 
 #### OutOfMemoryError
+
 ```java
 Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
 ```
+
 **Solutions:**
+
 ```bash
 # Increase heap size
 java -Xmx2g -Xms1g MyApplication
@@ -149,10 +173,13 @@ export GRADLE_OPTS="-Xmx2g -Xms1g"
 ```
 
 #### NoSuchMethodError
+
 ```java
 Exception in thread "main" java.lang.NoSuchMethodError
 ```
+
 **Solutions:**
+
 - Check dependency versions for conflicts
 - Update/downgrade conflicting libraries
 - Clear compilation cache and rebuild
@@ -163,10 +190,13 @@ Exception in thread "main" java.lang.NoSuchMethodError
 ### PostgreSQL Errors
 
 #### Connection refused
+
 ```
 psql: could not connect to server: Connection refused
 ```
+
 **Solutions:**
+
 ```bash
 # Check if PostgreSQL is running
 # macOS
@@ -185,10 +215,13 @@ sudo nano /etc/postgresql/14/main/pg_hba.conf
 ```
 
 #### Authentication failed
+
 ```
 psql: FATAL: password authentication failed for user "username"
 ```
+
 **Solutions:**
+
 ```bash
 # Reset password
 sudo -u postgres psql
@@ -202,10 +235,13 @@ postgresql://username:password@localhost:5432/database
 ```
 
 #### Database does not exist
+
 ```
 psql: FATAL: database "mydb" does not exist
 ```
+
 **Solutions:**
+
 ```bash
 # List databases
 psql -U postgres -l
@@ -222,10 +258,13 @@ psql -U postgres -d postgres -c "CREATE DATABASE mydb;"
 ### MongoDB Errors
 
 #### Connection timeout
+
 ```
 pymongo.errors.ServerSelectionTimeoutError: No servers found yet
 ```
+
 **Solutions:**
+
 ```bash
 # Check MongoDB service
 # macOS
@@ -242,10 +281,13 @@ telnet localhost 27017
 ```
 
 #### Authentication failed
+
 ```
 pymongo.errors.OperationFailure: Authentication failed
 ```
+
 **Solutions:**
+
 ```javascript
 // Create user with proper roles
 use admin
@@ -264,10 +306,13 @@ mongodb://myuser:mypassword@localhost:27017/mydatabase?authSource=admin
 ### Image build failures
 
 #### Error: failed to solve with frontend dockerfile.v0
+
 ```
 Error: failed to solve with frontend dockerfile.v0
 ```
+
 **Solutions:**
+
 ```bash
 # Check Dockerfile syntax
 docker build --no-cache -t myapp .
@@ -285,10 +330,13 @@ echo ".git" >> .dockerignore
 ```
 
 #### Error: Cannot connect to the Docker daemon
+
 ```
 Error: Cannot connect to the Docker daemon at unix:///var/run/docker.sock
 ```
+
 **Solutions:**
+
 ```bash
 # Start Docker service
 # macOS: Start Docker Desktop
@@ -307,10 +355,13 @@ docker version
 ### Container runtime errors
 
 #### Port already in use
+
 ```
 Error: bind: address already in use
 ```
+
 **Solutions:**
+
 ```bash
 # Find process using the port
 lsof -i :8080
@@ -328,10 +379,13 @@ docker stop container_name
 ```
 
 #### Container exits immediately
+
 ```
 Container exits with code 0 or 1
 ```
+
 **Solutions:**
+
 ```bash
 # Check container logs
 docker logs container_name
@@ -352,12 +406,15 @@ CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 ### HTTP Status Code Errors
 
 #### 400 Bad Request
+
 **Common Causes:**
+
 - Invalid JSON format in request body
 - Missing required parameters
 - Invalid parameter types
 
 **Debug Steps:**
+
 ```bash
 # Validate JSON
 echo '{"key": "value"}' | jq .
@@ -370,12 +427,15 @@ curl -X POST \
 ```
 
 #### 401 Unauthorized
+
 **Common Causes:**
+
 - Missing authentication token
 - Expired token
 - Invalid token format
 
 **Debug Steps:**
+
 ```bash
 # Check token format
 curl -H "Authorization: Bearer your-token" http://localhost:8000/protected
@@ -388,12 +448,15 @@ console.log('Token:', req.headers.authorization);
 ```
 
 #### 404 Not Found
+
 **Common Causes:**
+
 - Incorrect URL path
 - Route not registered
 - Case sensitivity issues
 
 **Debug Steps:**
+
 ```bash
 # List available routes (Express.js)
 app._router.stack.forEach(r => console.log(r.route?.path));
@@ -405,7 +468,9 @@ app.get('/users/*', catchAll);  // This should come after
 ```
 
 #### 500 Internal Server Error
+
 **Debug Steps:**
+
 ```bash
 # Check server logs
 tail -f /var/log/app.log
@@ -423,11 +488,14 @@ app.use((error, req, res, next) => {
 ### CORS Errors
 
 #### Access-Control-Allow-Origin
+
 ```
-Access to fetch at 'http://api.example.com' from origin 'http://localhost:3000' 
+Access to fetch at 'http://api.example.com' from origin 'http://localhost:3000'
 has been blocked by CORS policy
 ```
+
 **Solutions:**
+
 ```javascript
 // Express.js
 const cors = require('cors');
@@ -457,10 +525,13 @@ res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 ### Common Git Issues
 
 #### fatal: not a git repository
+
 ```bash
 fatal: not a git repository (or any of the parent directories): .git
 ```
+
 **Solutions:**
+
 ```bash
 # Initialize git repository
 git init
@@ -474,10 +545,13 @@ git clone https://github.com/user/repo.git
 ```
 
 #### fatal: remote origin already exists
+
 ```bash
 fatal: remote origin already exists
 ```
+
 **Solutions:**
+
 ```bash
 # Remove existing remote
 git remote remove origin
@@ -490,10 +564,13 @@ git remote -v
 ```
 
 #### Your branch is ahead of 'origin/main'
+
 ```bash
 Your branch is ahead of 'origin/main' by 2 commits
 ```
+
 **Solutions:**
+
 ```bash
 # Push commits to remote
 git push origin main
@@ -506,10 +583,13 @@ git rebase origin/main
 ```
 
 #### Merge conflicts
+
 ```bash
 CONFLICT (content): Merge conflict in file.txt
 ```
+
 **Solutions:**
+
 ```bash
 # View conflicted files
 git status
@@ -535,10 +615,13 @@ git mergetool
 ### Development Environment
 
 #### Port conflicts
+
 ```bash
 Error: listen EADDRINUSE: address already in use :::3000
 ```
+
 **Solutions:**
+
 ```bash
 # Find and kill process
 lsof -ti:3000 | xargs kill -9
@@ -551,7 +634,9 @@ const PORT = process.env.PORT || 3001;
 ```
 
 #### Environment variables not loaded
+
 **Solutions:**
+
 ```bash
 # Check if .env file exists
 ls -la .env
@@ -571,7 +656,9 @@ console.log('DB_URL:', process.env.DATABASE_URL);
 ### Production Environment
 
 #### Memory leaks
+
 **Debug Steps:**
+
 ```bash
 # Monitor memory usage
 top -p $(pgrep node)
@@ -587,10 +674,13 @@ def my_function():
 ```
 
 #### SSL certificate errors
+
 ```bash
 Error: unable to verify the first certificate
 ```
+
 **Solutions:**
+
 ```bash
 # Check certificate validity
 openssl x509 -in certificate.crt -text -noout
@@ -606,11 +696,12 @@ NODE_TLS_REJECT_UNAUTHORIZED=0
 ## Performance Issues
 
 ### Slow Database Queries
+
 ```sql
 -- Find slow queries (PostgreSQL)
-SELECT query, calls, total_time, mean_time 
-FROM pg_stat_statements 
-ORDER BY total_time DESC 
+SELECT query, calls, total_time, mean_time
+FROM pg_stat_statements
+ORDER BY total_time DESC
 LIMIT 10;
 
 -- Add indexes for common queries
@@ -622,6 +713,7 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com';
 ```
 
 ### High Memory Usage
+
 ```bash
 # Check memory usage
 free -h
@@ -640,6 +732,7 @@ print(f"Current memory usage: {current / 1024 / 1024:.1f} MB")
 ```
 
 ### High CPU Usage
+
 ```bash
 # Find CPU-intensive processes
 top -o %CPU
@@ -656,6 +749,7 @@ python -c "import pstats; pstats.Stats('profile.stats').sort_stats('cumulative')
 ## Getting Help
 
 ### When to Escalate
+
 1. Security-related errors
 2. Production system failures
 3. Data corruption issues
@@ -663,6 +757,7 @@ python -c "import pstats; pstats.Stats('profile.stats').sort_stats('cumulative')
 5. Problems persisting after 30+ minutes of troubleshooting
 
 ### Debugging Information to Gather
+
 - Exact error message and stack trace
 - Steps to reproduce the issue
 - Environment details (OS, versions, etc.)
@@ -671,6 +766,7 @@ python -c "import pstats; pstats.Stats('profile.stats').sort_stats('cumulative')
 - Screenshots or screen recordings if applicable
 
 ### Useful Commands for Information Gathering
+
 ```bash
 # System information
 uname -a
